@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    {% load static %}
+    {% load polrep_extras %}
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'polrep/css/style.css' %}">
+    <title>PolRep</title>
+  </head>
+  <body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="{% url 'polrep:index' %}">pol<strong>rep</strong></a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li>
+            <li><a href="#">Link</a></li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="#">Action</a></li>
+                <li><a href="#">Another action</a></li>
+                <li><a href="#">Something else here</a></li>
+                <li role="separator" class="divider"></li>
+                <li><a href="#">Separated link</a></li>
+                <li role="separator" class="divider"></li>
+                <li><a href="#">One more separated link</a></li>
+              </ul>
+            </li>
+          </ul>
+
+          <ul class="nav navbar-nav navbar-right">
+            <li><a id="signin-btn" data-toggle="modal" data-target="#sign-in-modal">
+              Sign In
+              <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>
+            </a></li>
+            <li><a href="{% url 'polrep:register' %}">
+              Register
+              {# <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>#}
+            </a></li>
+          </ul>
+        </div> <!-- /.navbar-collapse -->
+      </div> <!-- /.container-fluid -->
+    </nav>
+
+    <div class="container">
+      <form id="policy-search-form">
+        {% csrf_token %}
+        <input type="hidden" id="form-action-url" name="" value="{% url 'polrep:retrieve' %}">
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h2 class="panel-title">Search for Policies</h2>
+          </div>
+          <div class="panel-body">
+            {# MUNICIPALITY NAME AND TYPE #}
+            <div class="row">
+              <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                <div class="form-group">
+                  <label for="muni-name-select">Municipality Name</label>
+                  <select class="form-control" id="muni-name-select" name="muni-name-select" onchange="add_to_query(this, 'qp1');">
+                    <option selected="selected" disabled>Choose a Municipality Name</option>
+
+                    {% for muni in muni_names %}
+                    <option value="{{ muni.name }}">{{ muni.name }}</option>
+                    {% endfor %}
+
+                  </select>
+                </div>
+              </div>
+
+              <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                <div class="form-group">
+                  <label for="muni-type-select">Municipality Type</label>
+                  <select class="form-control" id="muni-type-select" name="muni-type-select" onchange="add_to_query(this, 'qp2');">
+                    <option selected="selected" disabled>Choose a Municipality Type</option>
+
+                    {% for muni in muni_types %}
+                    <option value="{{ muni.mtype }}">{{ muni.mtype }}</option>
+                    {% endfor %}
+
+                  </select>
+                </div>
+              </div>
+            </div>
+            {# END MUNICIPALITY NAME AND TYPE #}
+
+            {# POLICY STANCE AND YEAR #}
+            <div class="row">
+              <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                <div class="form-group">
+                  <label for="pol-stance-select">Policy Stance</label>
+                  <select class="form-control" id="pol-stance-select" name="pol-stance-select" onchange="add_to_query(this, 'qp3');">
+                    <option selected="selected" disabled>Choose a Policy Stance</option>
+
+                    {% for stance in stances %}
+                    <option value="{{ stance.stance }}">{{ stance.stance }}</option>
+                    {% endfor %}
+
+                  </select>
+                </div>
+              </div>
+
+              <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                <div class="form-group">
+                  <label for="pol-year-select">Policy Year</label>
+                  <select class="form-control" id="pol-year-select" name="pol-year-select" onchange="add_to_query(this, 'qp4');">
+                    <option selected="selected" disabled>Choose a Policy Year</option>
+
+                    {% for year in years %}
+                    <option value="{{ year.year }}">{{ year.year }}</option>
+                    {% endfor %}
+
+                  </select>
+                </div>
+              </div>
+            </div>
+            {# END POLICY STANCE AND YEAR #}
+
+            {# POLICY TYPE AND SUBTYPE #}
+            <div class="row">
+              <!--<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                <div class="form-group">
+                  <label for="pol-type-select">Policy Type</label>
+                  <select class="form-control" id="pol-type-select" name="" onchange="add_to_query(this, 'qp5');">
+                    <option selected="selected" disabled>Choose a Policy Type</option>
+                    <option value="law">Law</option>
+                    <option value="resolution">Resolution</option>
+                    <option value="resolution_law">Resolution as Law</option>
+                    <option value="other_type">Other</option>
+                  </select>
+                </div>
+              </div>-->
+
+              <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 centered">
+                <div class="form-group">
+                  <label for="pol-subtype-select">Policy Subtype</label>
+                  <select class="form-control" id="pol-subtype-select" name="pol-subtype-select" onchange="add_to_query(this, 'qp6');">
+                    <option selected="selected" disabled>Choose a Policy Subtype</option>
+
+                    {% for subtype in subtypes %}
+                    <option value="{{ subtype.subtype_name }}">{{ subtype.subtype_name }}</option>
+                    {% endfor %}
+
+                  </select>
+                </div>
+              </div>
+            </div>
+            {# END POLICY TYPE AND SUBTYPE #}
+
+          </div> {# panel-body #}
+          <div class="panel-footer">
+
+            <div id="empty-query-alert" class="alert alert-danger alert-dismissible" role="alert">
+              <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              Your query is empty. Please set at least <strong>1</strong> parameter.
+            </div>
+
+            <input id="query-tag-html" type="hidden" name="query-tag-html" value="">
+
+            <input type="button" id="qform-submit-btn" class="btn btn-primary pull-right" name="" value="Search" onclick="check_eq_or_submit();">
+            <strong>Query: </strong>
+
+            <span id="full-query">
+              <span id="qp1" class="label label-default"></span>
+              <span id="qp2" class="label label-primary"></span>
+              <span id="qp3" class="label label-success"></span>
+              <span id="qp4" class="label label-info"></span>
+              <span id="qp5" class="label label-warning"></span>
+              <span id="qp6" class="label label-danger"></span>
+            </span>
+
+            <div class="clearfix"></div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+
+    {% if results %}
+
+    <div class="container">
+      <div class="panel panel-default">
+        <!-- Default panel contents -->
+        <div class="panel-heading"><h4>Showing <strong>{{ number_of_results }}</strong> {{ result_or_results }} for {{ query_tags|safe }} </h4></div>
+
+
+        {% if results|length > 0 %}
+        <!-- Table -->
+        <table class="table table-striped table-hover results">
+
+          {% comment %}
+          <thead>
+            <th class="text-center">Result</th>
+            <th>File Name</th>
+            <th class="text-center">View</th>
+            <th class="text-center">Download</th>
+          </thead>
+          {% endcomment %}
+
+          {% for result in results %}
+            <tr>
+              <td class="text-center">{{ forloop.counter }}</td>
+              <td>{{ result.file_path|beautify|highlight:highlights|safe }}</td>
+              <td class="text-center"><a href="{% url 'polrep:pdf_viewer' pdf_name=result.file_path %}" class="btn btn-default">
+                View
+              </a></td>
+              <td class="text-center"><a href="{% url 'polrep:pdf_download' pdf_name=result.file_path %}" class="btn btn-primary">
+                Download
+                <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
+              </a></td>
+            </tr>
+          {% endfor %}
+        </table>
+
+        {% else %}
+
+        <div class="panel-body text-muted">
+          <h1>Your query did not yield any results. Please try again...</h1>
+        </div>
+
+        {% endif %}
+
+        <div class="panel-footer"></div>
+      </div>
+
+      {% endif %}
+
+
+      <!-- Modal -->
+      <div class="modal fade" id="sign-in-modal" tabindex="-1" role="dialog" aria-labelledby="sign-in-modalLabel">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h1 class="text-center" id="sign-in-modalLabel">Sign In</h1>
+            </div>
+            <div class="modal-body">
+              <form action="{% url 'polrep:signin' %}" method="post">
+                {% csrf_token %}
+
+                <div class="row">
+                  <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12 col-lg-offset-1 col-md-offset-1">
+                    <div class="form-group">
+                      <label for="email-signin">Email</label>
+                      <input type="email" class="form-control form-control-lg" id="email-signin" name="email" placeholder="user@example.com" required>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12 col-lg-offset-1 col-md-offset-1">
+                    <div class="form-group">
+                      <label for="password-signin">Password</label>
+                      <input type="password" class="form-control form-control-lg" id="password-signin" name="password" placeholder="" required>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12 col-lg-offset-1 col-md-offset-1">
+                    <p class="text-muted">Don't have an account? <a href="{% url 'polrep:register'%}" class="text-info">Register</a></p>
+                  </div>
+                </div>
+
+
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-success">Sign In</button>
+            </div>
+            </form>
+          </div>
+        </div>
+      </div> <!-- Sign-in Modal -->
+    </div>
+
+
+    <a id="return-to-top"><span class="glyphicon glyphicon-menu-up" aria-hidden="true"></span></a>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <!-- Local JS for additional functionality -->
+
+    <script type="text/javascript" src="{% static 'polrep/js/main.js' %}"></script>
+  </body>
+</html>

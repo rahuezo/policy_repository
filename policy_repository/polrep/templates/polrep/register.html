@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    {% load static %}
+    {% load polrep_extras %}
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'polrep/css/style.css' %}">
+    <title>PolRep</title>
+  </head>
+  <body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="{% url 'polrep:index' %}">pol<strong>rep</strong></a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li>
+            <li><a href="#">Link</a></li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="#">Action</a></li>
+                <li><a href="#">Another action</a></li>
+                <li><a href="#">Something else here</a></li>
+                <li role="separator" class="divider"></li>
+                <li><a href="#">Separated link</a></li>
+                <li role="separator" class="divider"></li>
+                <li><a href="#">One more separated link</a></li>
+              </ul>
+            </li>
+          </ul>
+
+          <ul class="nav navbar-nav navbar-right">
+            <li><a id="signin-btn" data-toggle="modal" data-target="#sign-in-modal">
+              Sign In
+              <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>
+            </a></li>
+            <li><a href="{% url 'polrep:register' %}">
+              Register
+              {# <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>#}
+            </a></li>
+          </ul>
+        </div> <!-- /.navbar-collapse -->
+      </div> <!-- /.container-fluid -->
+    </nav>
+
+    <div class="container">
+      {% if messages %}
+
+      <div class="jumbotron text-center">
+        {% for msg in messages %}
+        <h1>{{ msg|safe }}</h1>
+        {% endfor %}
+        <br>
+        <p>Please Sign In below.</p>
+        <p><a class="btn btn-success btn-lg" href="#" role="button"  data-toggle="modal" data-target="#sign-in-modal">Sign In</a></p>
+      </div>
+
+      {% else %}
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h1 class="text-center">Register</h1>
+        </div>
+        <div class="panel-body">
+          {% if user_exists %}
+            <div class="alert alert-danger alert-dismissible" role="alert">
+              <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              {{ user_exists }}
+            </div>
+          {% endif %}
+
+          <div id="form-errors-alert" class="alert alert-danger alert-dismissible" role="alert">
+            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            Your registration contains errors and/or empty fields.
+          </div>
+
+          <form id="registration-form">
+            {% csrf_token %}
+            <input type="hidden" id="registration-form-action-url" value="{% url 'polrep:register_success'%}">
+            <div class="row">
+              <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 col-lg-offset-2 col-md-offset-2">
+                <div class="form-group">
+                  <label for="first-name">First Name</label>
+                  <input type="text" class="form-control form-control-lg" id="first-name" name="first-name" placeholder="Jane" required>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 col-lg-offset-2 col-md-offset-2">
+                <div class="form-group">
+                  <label for="last-name">Last Name</label>
+                  <input type="text" class="form-control form-control-lg" id="last-name" name="last-name" placeholder="Doe" required>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 col-lg-offset-2 col-md-offset-2">
+                <div class="form-group">
+                  <label for="email">Email</label>
+                  <input type="email" class="form-control form-control-lg" id="email" name="email" placeholder="e.g. user@example.com" required>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 col-lg-offset-2 col-md-offset-2">
+                <div class="form-group">
+                  <label for="email-repeat">Repeat Email</label>
+                  <input type="email" class="form-control form-control-lg" id="email-repeat" placeholder="" required>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 col-lg-offset-2 col-md-offset-2">
+                <div class="form-group">
+                  <label for="password">Password</label>
+                  <input type="password" class="form-control form-control-lg" id="password" name="password" placeholder="e.g. aBc1Zc" required>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 col-lg-offset-2 col-md-offset-2">
+                <div class="form-group">
+                  <label for="password-repeat">Repeat Password</label>
+                  <input type="password" class="form-control form-control-lg" id="password-repeat" placeholder="" required><br>
+                  <dl class="text-muted text-center">
+                    <dt>Your password must contain at least:</dt>
+                    <dd id="min-chars">6 characters</dd>
+                    <dd id="min-lc">1 lowecase letter</dd>
+                    <dd id="min-uc">1 uppercase letter</dd>
+                    <dd id="min-num">1 number</dd>
+                  </dl>
+                </div>
+              </div>
+
+            </div>
+            <hr>
+            <div class="row text-center">
+              <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 col-lg-offset-2 col-md-offset-2">
+                <input type="submit" class="btn btn-success btn-lg" id="signup-btn" value="Sign Up">
+              </div>
+            </div>
+          </form>
+
+        </div>
+
+        <!--<div class="panel-footer">
+          FOOTER
+        </div>-->
+
+        {% endif %}
+      </div>
+
+      <!-- Modal -->
+      <div class="modal fade" id="sign-in-modal" tabindex="-1" role="dialog" aria-labelledby="sign-in-modalLabel">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h1 class="text-center" id="sign-in-modalLabel">Sign In</h1>
+            </div>
+            <div class="modal-body">
+              <form action="{% url 'polrep:signin' %}" method="post">
+                {% csrf_token %}
+
+                <div class="row">
+                  <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12 col-lg-offset-1 col-md-offset-1">
+                    <div class="form-group">
+                      <label for="email-signin">Email</label>
+                      <input type="email" class="form-control form-control-lg" id="email-signin" name="email" placeholder="user@example.com" required>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12 col-lg-offset-1 col-md-offset-1">
+                    <div class="form-group">
+                      <label for="password-signin">Password</label>
+                      <input type="password" class="form-control form-control-lg" id="password-signin" name="password" placeholder="" required>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12 col-lg-offset-1 col-md-offset-1">
+                    <p class="text-muted">Don't have an account? <a href="{% url 'polrep:register'%}" class="text-info">Register</a></p>
+                  </div>
+                </div>
+
+
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-success">Sign In</button>
+            </div>
+            </form>
+          </div>
+        </div>
+      </div> <!-- Sign-in Modal -->
+    </div>
+
+    <a id="return-to-top"><span class="glyphicon glyphicon-menu-up" aria-hidden="true"></span></a>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <!-- Local JS for additional functionality -->
+
+    <script type="text/javascript" src="{% static 'polrep/js/main.js' %}">
+
+      $(document).ready(function() {
+        // Check if passwords match
+
+        $('#signup-btn').click(function(){
+          validate_registration();
+        })
+
+        $('#password').on('keyup', function() {
+          check_password_security();
+        })
+
+        $('#password-repeat, #password').on('keyup', function() {
+          if ($('#password').val() == $('#password-repeat').val()) {
+            $('#password-repeat, #password').css('border-color', 'green');
+            $('#password-repeat, #password').css('box-shadow', '0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(0, 255, 0, 0.6)');
+          } else {
+            $('#password-repeat, #password').css('border-color', 'red');
+            $('#password-repeat, #password').css('box-shadow', '0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(255, 0, 0, 0.6)');
+          }
+        });
+
+        // Check if emails match
+
+        $('#email-repeat, #email').on('keyup', function () {
+          if ($('#email').val() == $('#email-repeat').val()) {
+            $('#email-repeat, #email').css('border-color', 'green');
+            $('#email-repeat, #email').css('box-shadow', '0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(0, 255, 0, 0.6)');
+          } else {
+            $('#email-repeat, #email').css('border-color', 'red');
+            $('#email-repeat, #email').css('box-shadow', '0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(255, 0, 0, 0.6)');
+          }
+        });
+      });
+
+    </script>
+
+  </body>
+</html>

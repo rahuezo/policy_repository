@@ -1,0 +1,161 @@
+/*
+darker-green: #8AB775
+lighter-green: #97C980
+dark-red: #9E4638
+light-red: #AF4E3F
+*/
+
+body {
+  padding-top: 65px;
+  padding-bottom: 65px;
+  background: #DB5A42;
+}
+
+.navbar {
+	border-radius: 0px;
+	margin-bottom: 100px;
+	/*background-color: #1d1e22;*/
+	/*border: none;*/
+	padding-left: 5%;
+	padding-right: 5%;
+}
+
+.navbar-brand {
+  font-size: 2em;
+  color: #CCC !important;
+}
+
+.navbar-brand:hover {
+  color: #FFF !important;
+}
+
+/*.navbar.navbar-inverse {
+    border: 0;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.navbar.navbar-inverse .navbar-collapse {
+    border: 0;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}*/
+
+#signin-btn {
+  background: #8AB775;
+  color: #FFF;
+  cursor: pointer;
+  transition: all ease-in 0.1s;
+}
+
+#signin-btn:hover {
+  background: #97C980;
+  color: #FFF;
+}
+
+#signout-btn {
+  background: #9E4638;
+  color: #FFF;
+  cursor: pointer;
+  transition: all ease-in 0.1s;
+}
+
+#signout-btn:hover {
+  background: #AF4E3F;
+  color: #FFF;
+}
+
+#user-dropdown {
+  background: #428bca;
+  color: #FFF;
+  cursor: pointer;
+  transition: all ease-in 0.1s;
+}
+
+#user-dropdown:hover {
+  background: #4a95d6;
+  color: #FFF;
+}
+
+.panel {
+  border-radius: 0;
+}
+
+.panel .panel-title {
+  color: #555;
+  font-weight: bold;
+  font-size: 1.5em;
+}
+
+#empty-query-alert {
+  display: none;
+}
+
+#form-errors-alert {
+  display: none;
+}
+
+#qform-submit-btn {
+  width: 20%;
+}
+
+.centered {
+  margin: 0 auto;
+}
+
+.results {
+  font-size: 1.3em;
+}
+
+#return-to-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: rgb(0, 0, 0);
+    background: rgba(0, 0, 0, 0.7);
+    width: 50px;
+    height: 50px;
+    display: block;
+    text-decoration: none;
+    display: none;
+    -webkit-transition: all 0.3s linear;
+    -moz-transition: all 0.3s ease;
+    -ms-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+}
+#return-to-top span {
+    color: #fff;
+    margin: 0;
+    position: relative;
+    left: 16px;
+    top: 13px;
+    font-size: 19px;
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -ms-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+}
+#return-to-top:hover {
+    background: rgba(0, 0, 0, 0.9);
+    cursor: pointer;
+}
+#return-to-top:hover i {
+    color: #fff;
+    top: 5px;
+    cursor: pointer;
+}
+
+
+#password-match-p {
+  display: none;
+}
+
+.container .jumbotron {
+  border-radius: 0;
+}
+
+input[type='submit'] {
+  width: 100%;
+}
