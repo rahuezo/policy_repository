@@ -3,18 +3,11 @@ from __future__ import unicode_literals
 
 from django.shortcuts import render
 from models import MunicipalityName, MunicipalityType, Year, Subtype, PolicyStance, Policy
-from django.contrib.auth.models import User
-from django.contrib.auth import logout
 
-from django.contrib import messages
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.conf import settings
-from django.core.urlresolvers import reverse
-from django.contrib.auth.decorators import login_required
 
-import re
 import os
-import random
 
 
 def index(request):
@@ -33,90 +26,6 @@ def index(request):
     }
 
     return render(request, 'polrep/index.html', context)
-
-
-def register(request):
-
-    context = {}
-
-    return render(request, 'polrep/register.html', context)
-
-
-def register_success(request):
-    if request.method == 'POST':
-        first_name = request.POST.get('first-name')
-        last_name = request.POST.get('last-name')
-        email = request.POST.get('email')
-        password = request.POST.get('password')
-
-        if first_name is not None and last_name is not None and email is not None and password is not None:
-            user_name = "{0} {1}".format(first_name, last_name)
-
-            try:
-                user_exists = User.objects.get(username=user_name)
-
-                context = {
-                    'user_exists': 'User already exists! Please re-enter your information or Sign In.'
-                }
-
-                return render(request, 'polrep/register.html', context)
-            except User.DoesNotExist:
-                new_user = User.objects.create_user(user_name, email, password)
-
-                new_user.first_name = first_name
-                new_user.last_name = last_name
-
-                new_user.save()
-
-                messages.success(request, 'Congratulations {0} {1}!<br><small>You have successfully registered your account.</small>'.format(first_name, last_name))
-
-                # Redirect to Successful Registration page
-                return HttpResponseRedirect(reverse('polrep:register_success'))
-    else:
-        context = {}
-        return render(request, 'polrep/register.html', context)
-
-
-def signin(request):
-    if request.method == 'POST':
-        email = request.POST.get('email')
-        password = request.POST.get('password')
-
-        if email is not None and password is not None:
-            try:
-                current_user = User.objects.get(email=email)
-
-                user_name = current_user.username
-
-                if current_user.check_password(password) == False:
-                    context = {
-                        'invalid_credentials': 'The entered password does not match our records! Please try again.',
-                    }
-
-                    return render(request, 'polrep/signin.html', context)
-
-                context = {
-                    'current_user': user_name,
-                    'current_user_msg': 'Welcome, {0}'.format(user_name),
-                }
-
-                return render(request, 'polrep/signin.html', context)
-            except User.DoesNotExist:
-
-                context = {
-                    'invalid_credentials': 'Invalid credentials! Please try again.',
-                }
-
-                return render(request, 'polrep/signin.html', context)
-    else:
-        context = {}
-        return render(request, 'polrep/signin.html', context)
-
-
-def successful_logout(request):
-    logout(request)
-
-    return render(request, 'polrep/index.html')
 
 
 def fetch_file(active_parameters, f):
@@ -149,7 +58,7 @@ def retrieve(request):
 
     for f in all_files:
         fetched_file = fetch_file(parameters, f)
-        if  fetched_file is not False:
+        if fetched_file is not False:
             results.append(fetched_file)
 
     subtypes = Subtype.objects.all()

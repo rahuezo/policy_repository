@@ -53,14 +53,27 @@ body {
   color: #FFF;
 }
 
-#register-btn {
+#signout-btn {
   background: #9E4638;
   color: #FFF;
+  cursor: pointer;
   transition: all ease-in 0.1s;
 }
 
-#register-btn:hover {
+#signout-btn:hover {
   background: #AF4E3F;
+  color: #FFF;
+}
+
+#user-dropdown {
+  background: #428bca;
+  color: #FFF;
+  cursor: pointer;
+  transition: all ease-in 0.1s;
+}
+
+#user-dropdown:hover {
+  background: #4a95d6;
   color: #FFF;
 }
 
@@ -79,11 +92,11 @@ body {
 }
 
 #form-errors-alert {
-  display: none; 
+  display: none;
 }
 
 #qform-submit-btn {
-  width: 20%;
+  width: 30%; 
 }
 
 .centered {
