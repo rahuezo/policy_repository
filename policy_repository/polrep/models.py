@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 from django.db import models
 
+
 class Policy(models.Model):
     file_path = models.CharField(max_length=1024)
     # word_count = models.IntegerField(blank=True, null=True)
@@ -13,6 +14,7 @@ class Policy(models.Model):
     def __unicode__(self):
         return self.file_path
 
+
 class Subtype(models.Model):
     subtype_name = models.CharField(max_length=250)
 
@@ -22,6 +24,7 @@ class Subtype(models.Model):
     def __unicode__(self):
         return self.subtype_name
 
+
 class Year(models.Model):
     year = models.CharField(max_length=4)
 
@@ -30,6 +33,7 @@ class Year(models.Model):
 
     def __unicode__(self):
         return self.year
+
 
 class MunicipalityName(models.Model):
     name = models.CharField(max_length=250)

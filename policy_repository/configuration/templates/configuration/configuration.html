@@ -9,6 +9,9 @@
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link rel="stylesheet" href="{% static 'polrep/css/style.css' %}">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.1.1/min/dropzone.min.css">
+
     <title>PolRep</title>
   </head>
   <body>
@@ -183,7 +186,7 @@
           <h4>Policy Library</h4>
           <div class="panel panel-default">
             <div class="panel-heading">
-              <h4>Add or Remove Policies</h4>
+              <h4>Policy Management</h4>
             </div>
             {% if super_user == False %}
             <div class="panel-body text-center">
@@ -226,7 +229,113 @@
             {% else %}
 
             <div class="panel-body text-center">
-              <h1 class="text-muted">You have <strong>Special Permissions</strong></h1><br>
+              {# <h1 class="text-muted">You have <strong>Special Permissions</strong></h1><br>#}
+              <form action="{% url 'configuration:upload_files' %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                  <h4><strong>Add Policies</strong></h4>
+                  <h5>What is the subtype of the policy or policies you wish to upload?</h5><br>
+                  <div class="form-group">
+                    <select class="form-control" id="pol-subtype-select" name="pol-subtype-select">
+                      <option selected="selected" disabled>Choose a Policy Subtype</option>
+
+                      {% for folder in available_folders %}
+                      <option value="{{ folder }}">{{ folder|title }}</option>
+                      {% endfor %}
+
+                    </select>
+                  </div>
+                </div>
+                <hr>
+
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                  <h4 class="text-muted">Your policies must be in the <strong>.pdf</strong>, <strong>.txt</strong>, or <strong>.docx</strong> format.
+                  Our policy naming scheme follows the strict format: <strong>Municipality Name YEAR.file_extension</strong>
+                  </h4>
+                  <div class="form-group">
+                    <label for="agree-name-format">
+                      <input type="checkbox" id="agree-name-format" name="agree" value=""> My policies follow this format
+                    </label>
+                  </div>
+                </div>
+
+                <div id="upload-policy-dialog">
+                  <hr>
+                  <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                      <input type="file" class="form-control" name="policy-files" value="" multiple>
+                      <p class="help-block">Only <strong>.txt</strong>, <strong>.pdf</strong>, <strong>.docx</strong></p>
+                  </div>
+
+                  <br>
+                  <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <button type="submit" class="btn btn-primary request-permissions">
+                      <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
+                      Upload
+                    </button>
+                  </div>
+                </div>
+              </form>
+              <a href="" data-toggle="modal" data-target="#policy-name-examples">Look at policy name examples</a>
+
+              <hr>
+
+              <form class="" action="{% url 'configuration:add_policy_subtype' %}" method="post">
+                {% csrf_token %}
+
+                <h4><strong>Add a New Policy Subtype</strong></h4>
+                {% if subtypes %}
+                <h5><strong>Existing Policy Subtypes:</strong>  {{ subtypes }}
+                {% endif %}</h5> <br>
+
+                <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                  <input type="text" class="form-control" id="new-policy-subtype" name="new-policy-subtype" placeholder="New Policy Subtype">
+                </div>
+
+                <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                  <button type="submit" class="btn btn-primary request-permissions">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    Add Policy Subtype
+                  </button>
+                </div>
+              </form>
+              <div class="clearfix"></div>
+              <hr>
+
+              <form class="" action="{% url 'configuration:add_municipality_type' %}" method="post">
+                {% csrf_token %}
+
+                <h4><strong>Add a New Municipality Type</strong></h4>
+                {% if muni_types %}
+                <h5><strong>Existing Municipality Types:</strong>  {{ muni_types }}
+                {% endif %}</h5>
+                <br>
+
+                <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                  <input type="text" class="form-control" id="new-municipality-type" name="new-municipality-type" placeholder="New Municipality Type">
+                </div>
+
+                <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                  <button type="submit" class="btn btn-primary request-permissions">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    Add Municipality Type
+                  </button>
+                </div>
+              </form>
+              <div class="clearfix"></div>
+              <hr>
+              <h4><strong>Remove Policies</strong></h4>
+              <h5></h5>
+
+              <form class="col-lg-12 col-md-12 col-sm-12 col-xs-12" action="index.html" method="post">
+                <button type="button" name="button" class="form-control btn btn-success">
+                  <span class="glyphicon glyphicon-filter" aria-hidden="true"></span> Filters</button>
+                <div class="clearfix"></div>
+                <div class="" id="filters-panel">
+                  
+                </div>
+                <input type="password" name="superuser-password" class="form-control" placeholder="Enter Superuser Password">
+              </form>
             </div>
 
             {% endif %}
@@ -234,6 +343,110 @@
         </div>
       </div>
 
+      <!-- Modal -->
+      <div class="modal fade" id="policy-name-examples" tabindex="-1" role="dialog" aria-labelledby="policy-name-examplesLabel">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title" id="policy-name-examplesLabel">Example Policy Names</h4>
+            </div>
+            <div class="modal-body">
+              <h4>These are example filenames for municipalities that have one policy per year.</h4><br>
+              <table class="table">
+                <thead>
+                  <th>Municipality Name</th>
+                  <th>Municipality Type</th>
+                  <th>Year</th>
+                  <th>File Type</th>
+                  <th>Corresponding File Name</th>
+                </thead>
+                <tr>
+                  <td>Albany</td>
+                  <td>City</td>
+                  <td>2012</td>
+                  <td>pdf</td>
+                  <td>City of Albany 2012.pdf</td>
+                </tr>
+                <tr>
+                  <td>Bethel</td>
+                  <td>Town</td>
+                  <td>2010</td>
+                  <td>txt</td>
+                  <td>Town of Bethel 2010.txt</td>
+                </tr>
+                <tr>
+                  <td>Naples</td>
+                  <td>Village</td>
+                  <td>2012</td>
+                  <td>docx</td>
+                  <td>Village of Naples 2012.docx</td>
+                </tr>
+              </table>
+
+              <h4>These are example filenames for municipalities that have more than one policy per year.</h4><br>
+
+              <table class="table">
+                <thead>
+                  <th>Municipality Name</th>
+                  <th>Municipality Type</th>
+                  <th>Year</th>
+                  <th>File Type</th>
+                  <th>Corresponding File Name</th>
+                </thead>
+                <tr>
+                  <td>Albany</td>
+                  <td>City</td>
+                  <td>2012</td>
+                  <td>pdf</td>
+                  <td>City of Albany 2012a.pdf</td>
+                </tr>
+                <tr>
+                  <td>Albany</td>
+                  <td>City</td>
+                  <td>2012</td>
+                  <td>pdf</td>
+                  <td>City of Albany 2012b.pdf</td>
+                </tr>
+                <tr>
+                  <td>Naples</td>
+                  <td>Village</td>
+                  <td>2012</td>
+                  <td>docx</td>
+                  <td>Village of Naples 2012a.docx</td>
+                </tr>
+                <tr>
+                  <td>Naples</td>
+                  <td>Village</td>
+                  <td>2012</td>
+                  <td>docx</td>
+                  <td>Village of Naples 2012b.docx</td>
+                </tr>
+                <tr>
+                  <td>Naples</td>
+                  <td>Village</td>
+                  <td>2012</td>
+                  <td>docx</td>
+                  <td>Village of Naples 2012c.docx</td>
+                </tr>
+              </table>
+
+              <h3>In Conclusion</h3>
+              <h4>If a municipality only has one policy per year, the file name
+                 should include the municipality type (village, town, city, etc.),
+                 the year that the policy was passed, and the file extension.
+              </h4><br>
+              <h4>If a municipality has more than one policy per year, the file name
+                 should include the municipality type (village, town, city, etc.),
+                 the year that the policy was passed, a unique letter identifier next to the year (2012a, 2012b, 2012c, etc.) and the file extension.
+              </h4>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
       <!-- End Library Config  -->
 
       <!-- Request Special Permissions  -->
@@ -285,5 +498,22 @@
 
     <script type="text/javascript" src="{% static 'polrep/js/main.js' %}"></script>
 
+    <!-- dropzonejs -->
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.1.1/min/dropzone.min.js">
+
+    </script>
+
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $('#agree-name-format').click(function(){
+          if($(this).is(':checked')) {
+            $('#upload-policy-dialog').slideDown();
+          }else {
+            $('#upload-policy-dialog').slideUp();
+          }
+        });
+      });
+    </script>
   </body>
 </html>

@@ -186,6 +186,15 @@ input[type='submit'] {
   padding-bottom: 5%;
 }
 
+input[type=file] {
+  margin: 0 auto;
+  border-radius: 0px;
+}
+
 #special-permissions-panel {
+  display: none;
+}
+
+#upload-policy-dialog {
   display: none;
 }
