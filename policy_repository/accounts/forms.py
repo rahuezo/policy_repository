@@ -30,7 +30,8 @@ class UserLoginForm(forms.Form):
 
 
 class UserRegisterForm(forms.ModelForm):
-    # username = forms.CharField()
+    first_name = forms.CharField(label="First Name")
+    last_name = forms.CharField(label="Last Name")
     email1 = forms.EmailField(label="Email")
     email2 = forms.EmailField(label="Confirm Email")
     password1 = forms.CharField(widget=forms.PasswordInput, label="Password")
@@ -40,6 +41,8 @@ class UserRegisterForm(forms.ModelForm):
         model = User
         fields = [
             'username',
+            'first_name',
+            'last_name',
             'email1',
             'email2',
             'password1',

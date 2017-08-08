@@ -96,7 +96,7 @@ body {
 }
 
 #qform-submit-btn {
-  width: 30%; 
+  width: 30%;
 }
 
 .centered {
@@ -158,4 +158,16 @@ body {
 
 input[type='submit'] {
   width: 100%;
+}
+
+#login-form ul, #register-form ul {
+  list-style: none;
+}
+
+.btn {
+  border-radius: 0;
+}
+
+.container.configuration > h5 {
+  color: #444;
 }

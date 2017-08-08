@@ -26,15 +26,21 @@ def login_view(request):
         years = Year.objects.all()
         stances = PolicyStance.objects.all()
 
+        fn, ln = (user.first_name, user.last_name)
+        username = user.username
+
+        current_user = "{0} {1}".format(fn, ln) if len(fn) > 0 and len(ln) > 0 else username
+
         context = {
             'subtypes': subtypes,
             'muni_names': muni_names,
             'muni_types': muni_types,
             'years': years,
             'stances': stances,
-            'current_user': user.username,
+            'current_user': current_user,
         }
         return render(request, "polrep/index.html", context)
+
 
 
     context = {
@@ -49,8 +55,14 @@ def register_view(request):
     if form.is_valid():
         user = form.save(commit=False)
         password = form.cleaned_data.get("password1")
+        email = form.cleaned_data.get("email1")
+        first_name = form.cleaned_data.get("first_name")
+        last_name = form.cleaned_data.get("last_name")
 
         user.set_password(password)
+        user.email = email
+        user.first_name = first_name
+        user.last_name = last_name
 
         user.save()
         login(request, user)
@@ -63,13 +75,18 @@ def register_view(request):
         years = Year.objects.all()
         stances = PolicyStance.objects.all()
 
+        fn, ln = (user.first_name, user.last_name)
+        username = user.username
+
+        current_user = "{0} {1}".format(fn, ln) if len(fn) > 0 and len(ln) > 0 else username
+
         context = {
             'subtypes': subtypes,
             'muni_names': muni_names,
             'muni_types': muni_types,
             'years': years,
             'stances': stances,
-            'current_user': user.username,
+            'current_user': current_user,
         }
         return render(request, "polrep/index.html", context)
 

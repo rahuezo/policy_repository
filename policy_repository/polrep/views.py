@@ -17,13 +17,29 @@ def index(request):
     years = Year.objects.all()
     stances = PolicyStance.objects.all()
 
-    context = {
-        'subtypes': subtypes,
-        'muni_names': muni_names,
-        'muni_types': muni_types,
-        'years': years,
-        'stances': stances,
-    }
+    try:
+        fn, ln = (request.user.first_name, request.user.last_name)
+        username = request.user.username
+
+        current_user = "{0} {1}".format(fn, ln) if len(fn) > 0 and len(ln) > 0 else username
+
+        context = {
+            'current_user': current_user,
+            'subtypes': subtypes,
+            'muni_names': muni_names,
+            'muni_types': muni_types,
+            'years': years,
+            'stances': stances,
+        }
+
+    except:
+        context = {
+            'subtypes': subtypes,
+            'muni_names': muni_names,
+            'muni_types': muni_types,
+            'years': years,
+            'stances': stances,
+        }
 
     return render(request, 'polrep/index.html', context)
 

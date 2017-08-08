@@ -156,6 +156,10 @@ body {
   border-radius: 0;
 }
 
+input[type='text'], input[type='email'], input[type='password'], textarea, .modal-content {
+  border-radius: 0 !important;
+}
+
 input[type='submit'] {
   width: 100%;
 }
@@ -166,4 +170,22 @@ input[type='submit'] {
 
 .btn {
   border-radius: 0;
+}
+
+.btn.save, .btn.cancel-permissions, .btn.request-permissions {
+  width: 100%;
+}
+
+
+
+.container h3 {
+  display: inline;
+}
+
+.panel-body {
+  padding-bottom: 5%;
+}
+
+#special-permissions-panel {
+  display: none;
 }

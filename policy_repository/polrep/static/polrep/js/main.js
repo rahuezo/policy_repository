@@ -115,6 +115,16 @@ function validate_registration() {
 
 $(document).ready(function(){
 
+  $('#request-special-permissions-btn').click(function(){
+    $('#request-special-permissions-btn').slideUp();
+    $('#special-permissions-panel').slideDown();
+  });
+
+  $('#cancel-permissions-btn').click(function(){
+    $('#request-special-permissions-btn').slideDown();
+    $('#special-permissions-panel').slideUp();
+  })
+
   // ===== Scroll to Top ====
   $(document).scroll(function() {
       if ($(this).scrollTop() >= 50) {        // If page is scrolled more than 50px
